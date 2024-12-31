@@ -95,3 +95,23 @@ def find_best_match(query: str, documents: List[Dict]) -> Dict:
             "question": "",
             "answer": "I apologize, but I encountered an error processing your question. Please try again."
         }
+
+# Configuration
+EMBEDDING_MODEL = "text-embedding-ada-002"
+COMPLETION_MODEL = "gpt-3.5-turbo"
+SIMILARITY_THRESHOLD = 0.7
+
+def get_chat_completion(query: str, context: str) -> str:
+    """Get chat completion using GPT-3.5."""
+    try:
+        response = client.chat.completions.create(
+            model=COMPLETION_MODEL,
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant answering questions based on the provided context."},
+                {"role": "user", "content": f"Context: {context}\n\nQuestion: {query}"}
+            ]
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"Error getting chat completion: {e}")
+        return "I apologize, but I encountered an error processing your question."
