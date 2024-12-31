@@ -1,10 +1,10 @@
 from flask import render_template, request, jsonify
 from app import app, db
 from models import Message
-from utils.rag_utils import load_interview_content, find_best_match
+from utils.rag_utils import load_content_from_file, find_relevant_context, get_chat_response
 
-# Load interview content at startup
-interview_content = load_interview_content()
+# Load content at startup
+knowledge_base = load_content_from_file()
 
 @app.route('/')
 def index():
@@ -29,9 +29,19 @@ def contact():
 
 @app.route('/chatbot', methods=['POST'])
 def chatbot():
-    query = request.json.get('query', '').lower()
+    query = request.json.get('query', '').strip()
+    if not query:
+        return jsonify({"response": "Please ask a question."})
 
-    # Find best matching Q&A using RAG
-    match = find_best_match(query, interview_content)
+    # Get relevant context using RAG
+    context = find_relevant_context(query, knowledge_base)
 
-    return jsonify({"response": match["answer"]})
+    # If no context found, return a default message
+    if not context:
+        return jsonify({
+            "response": "I apologize, but I don't have enough information to answer that question accurately."
+        })
+
+    # Get response using the context
+    response = get_chat_response(query, context)
+    return jsonify({"response": response})

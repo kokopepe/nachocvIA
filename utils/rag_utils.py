@@ -1,42 +1,57 @@
 import os
-import json
-from typing import List, Dict
-import openai
+import logging
+from typing import List, Dict, Any
 from openai import OpenAI
+import numpy as np
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 client = OpenAI()
 
-def load_interview_content(directory: str = "content/interviews") -> List[Dict]:
-    """Load interview Q&A content from text files."""
-    documents = []
+def load_content_from_file(file_path: str = "content/knowledge_base.txt") -> List[Dict[str, str]]:
+    """Load and chunk content from a text file."""
+    try:
+        if not os.path.exists(file_path):
+            logger.error(f"File not found: {file_path}")
+            return []
 
-    # Ensure the directory exists
-    os.makedirs(directory, exist_ok=True)
+        with open(file_path, 'r') as file:
+            content = file.read()
 
-    # If no files exist yet, create a sample one
-    if not os.listdir(directory):
-        sample_content = [
-            {"question": "Tell me about yourself", 
-             "answer": "I am Ignacio Garcia, a software developer with expertise in web development and system architecture. I specialize in creating efficient, scalable solutions using modern technologies."},
-            {"question": "What are your strengths?",
-             "answer": "My key strengths include problem-solving, adaptability, and strong communication skills. I excel at breaking down complex problems and finding innovative solutions."}
-        ]
-        with open(f"{directory}/sample_qa.json", "w") as f:
-            json.dump(sample_content, f, indent=2)
+        # Split content into sections based on headers
+        sections = []
+        current_section = {"title": "", "content": []}
 
-    # Load all JSON files in the directory
-    for filename in os.listdir(directory):
-        if filename.endswith('.json'):
-            try:
-                with open(os.path.join(directory, filename), 'r') as f:
-                    content = json.load(f)
-                    if isinstance(content, list):
-                        documents.extend(content)
-            except Exception as e:
-                print(f"Error loading {filename}: {e}")
+        for line in content.split('\n'):
+            line = line.strip()
+            if not line:
                 continue
 
-    return documents
+            if line.startswith('#'):
+                if current_section["title"] and current_section["content"]:
+                    sections.append({
+                        "title": current_section["title"],
+                        "content": " ".join(current_section["content"])
+                    })
+                current_section = {"title": line[1:].strip(), "content": []}
+            else:
+                current_section["content"].append(line)
+
+        # Add the last section
+        if current_section["title"] and current_section["content"]:
+            sections.append({
+                "title": current_section["title"],
+                "content": " ".join(current_section["content"])
+            })
+
+        logger.info(f"Loaded {len(sections)} sections from {file_path}")
+        return sections
+
+    except Exception as e:
+        logger.error(f"Error loading content: {str(e)}")
+        return []
 
 def get_embedding(text: str) -> List[float]:
     """Get embedding for a piece of text using OpenAI's API."""
@@ -47,71 +62,73 @@ def get_embedding(text: str) -> List[float]:
         )
         return response.data[0].embedding
     except Exception as e:
-        print(f"Error getting embedding: {e}")
+        logger.error(f"Error getting embedding: {str(e)}")
         return []
 
-def find_best_match(query: str, documents: List[Dict]) -> Dict:
-    """Find the best matching Q&A pair for a given query."""
+def cosine_similarity(a: List[float], b: List[float]) -> float:
+    """Calculate cosine similarity between two vectors."""
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
+def find_relevant_context(query: str, sections: List[Dict[str, str]], top_k: int = 2) -> str:
+    """Find the most relevant sections for a given query."""
     try:
-        if not documents:
-            return {
-                "question": "",
-                "answer": "I apologize, but I don't have any information loaded yet. Please try again later."
-            }
+        if not sections:
+            logger.warning("No sections available for context retrieval")
+            return ""
 
         # Get query embedding
         query_embedding = get_embedding(query)
         if not query_embedding:
-            return {
-                "question": "",
-                "answer": "I apologize, but I encountered an error processing your question. Please try again."
-            }
+            return ""
 
-        # Get embeddings for all questions
-        best_similarity = -1
-        best_match = None
+        # Get embeddings for all sections
+        section_embeddings = []
+        for section in sections:
+            # Combine title and content for embedding
+            section_text = f"{section['title']}: {section['content']}"
+            embedding = get_embedding(section_text)
+            if embedding:
+                section_embeddings.append({
+                    "text": section_text,
+                    "embedding": embedding
+                })
 
-        for doc in documents:
-            # Get embedding for the question
-            doc_embedding = get_embedding(doc["question"])
-            if not doc_embedding:
-                continue
+        # Calculate similarities and get top-k sections
+        similarities = [
+            (cosine_similarity(query_embedding, section["embedding"]), section["text"])
+            for section in section_embeddings
+        ]
+        similarities.sort(reverse=True)
 
-            # Calculate cosine similarity
-            similarity = sum(a * b for a, b in zip(query_embedding, doc_embedding))
-
-            if similarity > best_similarity:
-                best_similarity = similarity
-                best_match = doc
-
-        return best_match if best_match else {
-            "question": "",
-            "answer": "I apologize, but I don't have specific information about that. Please try asking another question about my professional experience or qualifications."
-        }
+        # Return concatenated top-k sections
+        relevant_sections = [text for _, text in similarities[:top_k]]
+        return "\n".join(relevant_sections)
 
     except Exception as e:
-        print(f"Error in finding best match: {e}")
-        return {
-            "question": "",
-            "answer": "I apologize, but I encountered an error processing your question. Please try again."
-        }
+        logger.error(f"Error finding relevant context: {str(e)}")
+        return ""
+
+def get_chat_response(query: str, context: str) -> str:
+    """Get chat completion using the relevant context."""
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": 
+                 "You are a helpful assistant answering questions about Ignacio Garcia. "
+                 "Use the provided context to answer questions accurately and concisely. "
+                 "If you're not sure about something, say so instead of making assumptions."},
+                {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {query}"}
+            ],
+            temperature=0.7,
+            max_tokens=150
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        logger.error(f"Error getting chat response: {str(e)}")
+        return "I apologize, but I encountered an error processing your question."
 
 # Configuration
 EMBEDDING_MODEL = "text-embedding-ada-002"
 COMPLETION_MODEL = "gpt-3.5-turbo"
 SIMILARITY_THRESHOLD = 0.7
-
-def get_chat_completion(query: str, context: str) -> str:
-    """Get chat completion using GPT-3.5."""
-    try:
-        response = client.chat.completions.create(
-            model=COMPLETION_MODEL,
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant answering questions based on the provided context."},
-                {"role": "user", "content": f"Context: {context}\n\nQuestion: {query}"}
-            ]
-        )
-        return response.choices[0].message.content
-    except Exception as e:
-        print(f"Error getting chat completion: {e}")
-        return "I apologize, but I encountered an error processing your question."
