@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row align-items-center mb-5">
+    <div class="col-md-4 text-center">
+        <img src="https://images.unsplash.com/photo-1576558656222-ba66febe3dec" 
+             alt="Ignacio Garcia" 
+             class="profile-image mb-3">
+    </div>
+    <div class="col-md-8">
+        <h1 class="display-4">Hello, I'm Ignacio Garcia</h1>
+        <p class="lead">Software Developer & Solution Architect</p>
+        <hr class="my-4">
+        <p>I'm a passionate software developer with expertise in web development and system architecture. I specialize in creating efficient, scalable solutions using modern technologies. Currently seeking new opportunities to contribute my skills and experience to innovative projects.</p>
+        <div class="mt-4">
+            <a href="{{ url_for('cv') }}" class="btn btn-primary me-2">View My CV</a>
+            <a href="{{ url_for('contact') }}" class="btn btn-secondary">Contact Me</a>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="mb-4">Chat with my AI Assistant</h2>
+        <p class="text-muted mb-3">Feel free to ask questions about my experience, skills, or professional background. My AI assistant is here to help!</p>
+        <div class="chat-container">
+            <div id="chat-messages" class="chat-messages"></div>
+            <div class="chat-input-container">
+                <div class="input-group">
+                    <input type="text" id="chat-input" class="form-control" placeholder="Ask me anything about my experience...">
+                    <button class="btn btn-primary" id="send-button">
+                        <i class="bi bi-send"></i> Send
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+{% endblock %}
