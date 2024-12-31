@@ -1,0 +1,84 @@
+# Profile
+Ignacio García
+IT Leader, Ing, MBA 
+University of Pittsburgh - Joseph M. Katz Graduate School of Business 
+Prague, Czechia 
+
+# Summary
+I am an accomplished Service Manager and IT Leader with 20+ years' experience in the delivery of large-scale projects and services. Motivated and results-focused with a proven track record of managing delivery against contracted SLAs and KPIs in alignment with ITIL best practices. I consistently ensure that services are delivered in line with budget, scope, schedule, risks, outcomes, prioritization, value, and benefits. A strategic thinker able to excel in challenging environments, as well as a positive communicator with strong analytical skills and a practical approach to solving problems.
+
+# Experience
+Assistant Director ITSM at Sysmex Europe (Apr 2023 - Sep 2024)
+- Manager of Services & Support, reporting to EMEA CIO, responsible for Service Desk and strategy to enhance Service Mgmt. capabilities.
+- Product Owner and Project Leader of ServiceNow implementation, deployed Incident Management in Germany in 5 months, working with SN integrator in an agile setup.
+- Incident Manager Process Owner; conducts Service Reviews with IT Heads to improve Incident Mgmt KPIs and SLAs.
+
+Service Excellence - Operations Manager at Novartis (Jan 2020 - Jun 2022)
+- Member of the CoE Leadership Team to drive Service Excellence/Strategic Planning.
+- Managed Business Operations (Purchase Orders, Invoices up to €10M), licenses compliance, budget tracking, P&L monitoring, communications, and continuous improvement.
+- Defined CoE strategy and led DMAIC initiative to improve employee satisfaction.
+- Reported to senior leadership on performance vs objectives.
+
+Principal Service Delivery Manager at DHL IT Services (Aug 2009 - Dec 2018, Prague)
+- Responsible for provision of Express services in America, mission-critical, multiple technologies/support models.
+- Single point of contact for management escalations on production issues.
+- Chaired monthly Service Reviews/QBRs.
+- Managed relationships with suppliers; multiple contracts renewed quarterly.
+- Negotiated/secured SLAs and ensured KPIs achievement.
+
+Domain Manager (IT Operations) at DHL IT Services (Jan 2008 - Aug 2009, Prague)
+- Built/led a 10-person team supporting 13 global services 24x7.
+- Improved knowledge transfer, resources allocation, and Incident & Problem Management KPIs.
+- Stabilized critical service, reduced support effort by 30%.
+
+Technical Lead at DHL IT Services (Feb 2006 - Dec 2007)
+- Built/led a 10-person team supporting 13 global services 24x7.
+- Introduced cross-functional/departmental approach; improved Incident & Problem Management KPIs.
+- Reduced support effort by 30%.
+
+Senior Consultant at Capgemini (May 2001 - Jan 2006, Full-time, Barcelona)
+- Requirements gathering, project development, post go-live hyper-care.
+- Roles included Business Analyst, Technical Analyst, Coding, Testing, team management, impact/risk analysis.
+
+# Education
+- Global Executive MBA from University of Pittsburgh (2008 - 2009)
+- Computer Engineer from Universidad de Zaragoza (1992 - 1999). Final thesis on Ontologies building in Java for Telefonica.
+
+# Skills
+- IT Service Management (ITSM)
+- Digital Transformation
+- Team Leadership
+- ITIL Practices
+- Project Management
+- Problem Solving
+- Azure Fundamentals (Microsoft, Oct 2022)
+- Professional Scrum Product Owner (Scrum.org, Sep 2022)
+(Plus 48 more skills)
+
+# Licenses & Certifications
+- Azure Fundamentals (Microsoft, Oct 2022)
+- Professional Scrum Product Owner (Scrum.org, Sep 2022)
+(Plus 5 more certifications)
+
+# Recommendations (Received):
+1) Anantha Narayanan (Nov 20, 2018; managed Ignacio directly)
+   - “Seasoned IT professional with expertise in Service Support Management and Service Delivery Management... works well in a multinational environment... good grasp of ITIL concepts.”
+
+2) Vladimir K. (Nov 18, 2018; reported directly to Ignacio)
+   - “Excellent analytical thinking, communication, and collaboration skills... fosters team spirit and good stakeholder relationships... strong mentor.”
+
+# Courses:
+- ITIL Foundation (DHL IT Services)
+- ITIL Service Strategy (DHL IT Services)
+(Plus 4 more courses)
+
+# Honors & Awards:
+- VESPA (Very Special Achievement Award), DHL (Jul 2010)
+  For aligning charges for Express Global portfolio: 200 services, 1,200 servers, thousands of support hours.
+- VESPA (Very Special Achievement Award), DHL (Apr 2009)
+  For stabilizing critical service by detecting/removing a complex memory leak, resulting in a 30% reduction in support effort.
+(Plus 1 more honor)
+
+# Languages:
+- English (Full professional proficiency)
+- Spanish (Native/bilingual proficiency)
