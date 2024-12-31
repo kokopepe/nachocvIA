@@ -10,4 +10,5 @@ dependencies = [
     "openai>=1.58.1",
     "psycopg2-binary>=2.9.10",
     "sqlalchemy>=2.0.36",
+    "trafilatura>=2.0.0",
 ]
