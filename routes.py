@@ -1,6 +1,10 @@
 from flask import render_template, request, jsonify
 from app import app, db
-from models import InterviewQuestion, Message
+from models import Message
+from utils.rag_utils import load_interview_content, find_best_match
+
+# Load interview content at startup
+interview_content = load_interview_content()
 
 @app.route('/')
 def index():
@@ -26,10 +30,8 @@ def contact():
 @app.route('/chatbot', methods=['POST'])
 def chatbot():
     query = request.json.get('query', '').lower()
-    question = InterviewQuestion.query.filter(
-        InterviewQuestion.question.ilike(f'%{query}%')
-    ).first()
-    
-    if question:
-        return jsonify({"response": question.answer})
-    return jsonify({"response": "I apologize, but I don't have specific information about that. Please try asking another question about my professional experience or qualifications."})
+
+    # Find best matching Q&A using RAG
+    match = find_best_match(query, interview_content)
+
+    return jsonify({"response": match["answer"]})
