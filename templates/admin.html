@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Knowledge Base Management</h1>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Upload Knowledge Base Content</h5>
+            <div id="drop-zone" class="border rounded p-4 text-center mb-3" 
+                 style="border-style: dashed !important;">
+                <i class="bi bi-cloud-upload display-4"></i>
+                <p class="mt-3">Drag and drop your text file here<br>or click to select a file</p>
+                <input type="file" id="file-input" class="d-none" accept=".txt">
+            </div>
+            <div class="progress d-none mb-3">
+                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+            </div>
+            <div id="upload-status" class="alert d-none"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Current Knowledge Base Content</h5>
+            <div id="current-content" class="bg-dark p-3 rounded">
+                <pre class="mb-0 text-light"></pre>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}

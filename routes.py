@@ -1,4 +1,6 @@
+import os
 from flask import render_template, request, jsonify
+from werkzeug.utils import secure_filename
 from app import app, db
 from models import Message
 from utils.rag_utils import load_content_from_file, find_relevant_context, get_chat_response
@@ -45,3 +47,43 @@ def chatbot():
     # Get response using the context
     response = get_chat_response(query, context)
     return jsonify({"response": response})
+
+# New admin routes
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
+
+@app.route('/admin/upload', methods=['POST'])
+def upload_file():
+    try:
+        if 'file' not in request.files:
+            return jsonify({"success": False, "error": "No file provided"})
+
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({"success": False, "error": "No file selected"})
+
+        if not file.filename.endswith('.txt'):
+            return jsonify({"success": False, "error": "Only .txt files are allowed"})
+
+        filename = secure_filename(file.filename)
+        file.save('content/knowledge_base.txt')
+
+        # Reload the knowledge base
+        global knowledge_base
+        knowledge_base = load_content_from_file()
+
+        return jsonify({"success": True})
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
+@app.route('/admin/content')
+def get_content():
+    try:
+        with open('content/knowledge_base.txt', 'r') as f:
+            return f.read()
+    except FileNotFoundError:
+        return "No content available"
+    except Exception as e:
+        return f"Error reading content: {str(e)}"
