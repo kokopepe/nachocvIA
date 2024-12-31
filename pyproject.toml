@@ -13,5 +13,6 @@ dependencies = [
     "pypdf2>=3.0.1",
     "sqlalchemy>=2.0.36",
     "trafilatura>=2.0.0",
+    "twilio>=9.4.1",
     "werkzeug>=3.1.3",
 ]

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <h1 class="mb-4">Schedule an Appointment</h1>
+        
+        <div class="card">
+            <div class="card-body">
+                <form id="appointment-form" class="needs-validation" novalidate>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="user-type" class="form-label">I am a:</label>
+                        <select class="form-select" id="user-type" name="user_type" required>
+                            <option value="">Select...</option>
+                            <option value="recruiter">Recruiter</option>
+                            <option value="employer">Employer</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="company" class="form-label">Company (Optional)</label>
+                        <input type="text" class="form-control" id="company" name="company">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="date" class="form-label">Preferred Date and Time</label>
+                        <input type="datetime-local" class="form-control" id="date" name="date" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">Additional Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-calendar-check"></i> Request Appointment
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <h3>Available Time Slots</h3>
+            <div id="calendar" class="mb-3"></div>
+            
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i>
+                Appointments are typically 30 minutes long. After submitting your request,
+                you will receive a confirmation email with the final details.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Appointment Requested</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Your appointment request has been submitted successfully. You will receive an email confirmation shortly.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/appointment.js') }}"></script>
+{% endblock %}
