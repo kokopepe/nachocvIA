@@ -7,6 +7,108 @@ Prague, Czechia
 # Summary
 I am an accomplished Service Manager and IT Leader with 20+ years' experience in the delivery of large-scale projects and services. Motivated and results-focused with a proven track record of managing delivery against contracted SLAs and KPIs in alignment with ITIL best practices. I consistently ensure that services are delivered in line with budget, scope, schedule, risks, outcomes, prioritization, value, and benefits. A strategic thinker able to excel in challenging environments, as well as a positive communicator with strong analytical skills and a practical approach to solving problems.
 
+# Leadership Style
+My leadership philosophy centers on empowerment and continuous improvement. I believe in creating an environment where team members feel supported to take initiative and grow professionally. I practice servant leadership, focusing on removing obstacles for my team and ensuring they have the resources needed to succeed. I maintain an open-door policy and encourage regular feedback sessions to foster transparent communication.
+
+# Challenge Examples
+## Critical Service Recovery
+When I joined DHL IT Services as Domain Manager, I faced a critical service experiencing frequent outages. I implemented a structured approach:
+1. Formed a dedicated task force
+2. Conducted thorough root cause analysis
+3. Identified and resolved a complex memory leak
+4. Implemented monitoring improvements
+Result: 30% reduction in support effort and significantly improved service stability.
+
+## Digital Transformation
+At Sysmex Europe, I led a major ServiceNow implementation:
+1. Deployed Incident Management across Germany in 5 months
+2. Collaborated with integrator in agile setup
+3. Established new processes and trained staff
+4. Achieved 98% user adoption rate
+Result: Streamlined IT service management and improved response times by 40%.
+
+# Management Philosophy
+I believe in data-driven decision making while maintaining a human-centric approach to leadership. Key principles:
+1. Transparent communication
+2. Clear goal setting and metrics
+3. Regular feedback and recognition
+4. Investment in team development
+5. Balance between process and flexibility
+
+# Technical Expertise
+- ITIL Framework implementation and optimization
+- ServiceNow platform administration and customization
+- Cloud infrastructure management (Azure, AWS)
+- Enterprise architecture planning
+- Digital transformation strategy
+- Agile methodologies (Scrum, Kanban)
+- IT service management tools and processes
+- Business process optimization
+- Security compliance and risk management
+
+# Project Management Approach
+I follow a hybrid approach combining traditional and agile methodologies:
+1. Clear project charter and scope definition
+2. Agile sprints for development and implementation
+3. Regular stakeholder communication
+4. Risk management and mitigation planning
+5. Continuous improvement through retrospectives
+
+# Communication Style
+Professional yet approachable, I adapt my communication style to the audience:
+- With executives: Focus on strategic impact and ROI
+- With team members: Collaborative and supportive
+- With stakeholders: Clear and solution-oriented
+- In crisis situations: Calm and decisive
+
+# Work-Life Balance
+While maintaining professional boundaries, I believe in sustainable work practices:
+- Regular exercise and outdoor activities
+- Continuous learning through reading and courses
+- Family time and personal development
+- Community involvement in tech education
+
+# Career Development
+I actively support team members' growth through:
+- Mentoring programs
+- Skill development opportunities
+- Career path planning
+- Cross-functional training
+- Industry certification support
+
+# Industry Insights
+My perspective on current IT trends:
+- AI and automation in IT services
+- Cloud-native transformation
+- DevOps culture and practices
+- Cybersecurity challenges
+- Sustainable IT practices
+
+# Common Questions and Answers
+## Leadership Experience
+Q: How do you handle difficult team members?
+A: I focus on understanding root causes through one-on-one discussions, provide clear feedback, and develop improvement plans collaboratively. If needed, I establish specific performance metrics and regular check-ins.
+
+## Technical Skills
+Q: How do you stay current with technology?
+A: I combine hands-on learning, industry certifications, and regular participation in tech conferences. I also maintain a network of industry peers for knowledge sharing.
+
+## Crisis Management
+Q: Describe a major crisis you managed?
+A: During a critical service outage at DHL, I led a 24-hour recovery operation, coordinating teams across time zones. We not only resolved the immediate issue but implemented preventive measures that reduced similar incidents by 80%.
+
+## Career Growth
+Q: What's your career progression strategy?
+A: I focus on expanding both technical and leadership capabilities, seeking roles with increasing scope and complexity. I believe in learning from each position and building strong networks.
+
+# Future Vision
+My goals for the next phase of my career:
+1. Leading digital transformation initiatives
+2. Mentoring the next generation of IT leaders
+3. Contributing to industry best practices
+4. Driving innovation in service management
+5. Building high-performing, diverse teams
+
 # Experience
 Assistant Director ITSM at Sysmex Europe (Apr 2023 - Sep 2024)
 - Manager of Services & Support, reporting to EMEA CIO, responsible for Service Desk and strategy to enhance Service Mgmt. capabilities.
