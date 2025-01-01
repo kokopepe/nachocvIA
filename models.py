@@ -22,6 +22,7 @@ class Appointment(db.Model):
     company = db.Column(db.String(200))
     date = db.Column(db.DateTime, nullable=False)
     duration = db.Column(db.Integer, default=30)  # duration in minutes
+    timezone = db.Column(db.String(50), nullable=False)  # Store the user's timezone
     status = db.Column(db.String(20), default='pending')  # pending, confirmed, cancelled
     notes = db.Column(db.Text)
     created_at = db.Column(db.DateTime, server_default=db.func.now())

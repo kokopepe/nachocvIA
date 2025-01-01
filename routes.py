@@ -5,7 +5,7 @@ from app import app, db
 from models import Message, Appointment
 from utils.rag_utils import load_content_from_file, find_relevant_context, get_chat_response
 from utils.linkedin_scraper import save_linkedin_data
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
 
 # Configure logging
@@ -17,6 +17,64 @@ os.makedirs('content/interviews', exist_ok=True)
 
 # Load content at startup
 knowledge_base = load_content_from_file()
+
+@app.route('/appointment/slots', methods=['GET'])
+def get_appointment_slots():
+    try:
+        # Get start and end dates from query parameters
+        start_date = request.args.get('start', type=str)
+        end_date = request.args.get('end', type=str)
+
+        # Query appointments within the date range
+        appointments = Appointment.query.filter(
+            Appointment.date >= start_date,
+            Appointment.date <= end_date,
+            Appointment.status != 'cancelled'
+        ).all()
+
+        return jsonify({
+            'appointments': [{
+                'date': apt.date.isoformat(),
+                'duration': apt.duration
+            } for apt in appointments]
+        })
+    except Exception as e:
+        logger.error(f"Error fetching appointment slots: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+# Update the appointment route to handle timezone
+@app.route('/appointment', methods=['GET', 'POST'])
+def appointment():
+    if request.method == 'POST':
+        try:
+            data = request.json
+            # Convert the appointment time from user's timezone to UTC
+            appointment = Appointment(
+                name=data['name'],
+                email=data['email'],
+                user_type=data['user_type'],
+                company=data.get('company', ''),
+                date=datetime.fromisoformat(data['date'].replace('Z', '+00:00')),
+                timezone=data['timezone'],
+                notes=data.get('notes', '')
+            )
+
+            # Check for conflicts
+            existing_appointment = Appointment.query.filter(
+                Appointment.date == appointment.date,
+                Appointment.status != 'cancelled'
+            ).first()
+
+            if existing_appointment:
+                return jsonify({"success": False, "error": "This time slot is already booked"})
+
+            db.session.add(appointment)
+            db.session.commit()
+            return jsonify({"success": True})
+        except Exception as e:
+            logger.error(f"Error creating appointment: {str(e)}")
+            return jsonify({"success": False, "error": str(e)})
+    return render_template('appointment.html')
 
 @app.route('/')
 def index():
@@ -43,26 +101,6 @@ def contact():
             return jsonify({"success": False, "error": str(e)})
     return render_template('contact.html')
 
-@app.route('/appointment', methods=['GET', 'POST'])
-def appointment():
-    if request.method == 'POST':
-        try:
-            data = request.json
-            appointment = Appointment(
-                name=data['name'],
-                email=data['email'],
-                user_type=data['user_type'],
-                company=data.get('company', ''),
-                date=datetime.fromisoformat(data['date'].replace('Z', '+00:00')),
-                notes=data.get('notes', '')
-            )
-            db.session.add(appointment)
-            db.session.commit()
-            return jsonify({"success": True})
-        except Exception as e:
-            logger.error(f"Error creating appointment: {str(e)}")
-            return jsonify({"success": False, "error": str(e)})
-    return render_template('appointment.html')
 
 @app.route('/chatbot', methods=['POST'])
 def chatbot():
