@@ -12,18 +12,17 @@ client = OpenAI()
 
 def load_content_from_file(file_path: str = "content/knowledge_base.txt") -> List[Dict[str, str]]:
     """
-    Load and chunk content from a text file.
+    Load and chunk content from a text file with improved sectioning.
 
-    The knowledge base is split into sections based on headers (lines starting with #).
-    Each section becomes a separate chunk that can be independently embedded and retrieved.
+    The knowledge base is split into meaningful sections that preserve context:
+    - Professional Summary
+    - Work Experience
+    - Skills and Expertise
+    - Leadership Style
+    - Project Examples
+    - etc.
 
-    GPT-3.5-turbo has a context window of 16K tokens (~12,000 words)
-    GPT-4 has a context window of 32K tokens (~24,000 words)
-
-    When chunking the content:
-    1. Each section (chunk) should be meaningful on its own
-    2. We aim to keep sections under 2000 words to ensure we can combine multiple relevant sections
-    3. Headers help maintain context when sections are retrieved independently
+    Each section should be self-contained but maintain cross-referencing ability.
     """
     try:
         if not os.path.exists(file_path):
@@ -33,24 +32,33 @@ def load_content_from_file(file_path: str = "content/knowledge_base.txt") -> Lis
         with open(file_path, 'r') as file:
             content = file.read()
 
-        # Split content into sections based on headers
+        # Split content into sections based on headers and subheaders
         sections = []
         current_section = {"title": "", "content": []}
+        current_subsection = []
 
         for line in content.split('\n'):
             line = line.strip()
             if not line:
                 continue
 
-            # Start new section on headers (lines starting with #)
-            if line.startswith('#'):
-                # Save previous section if it exists
+            # Major section headers (lines starting with #)
+            if line.startswith('# '):
                 if current_section["title"] and current_section["content"]:
                     sections.append({
                         "title": current_section["title"],
                         "content": " ".join(current_section["content"])
                     })
-                current_section = {"title": line[1:].strip(), "content": []}
+                current_section = {"title": line[2:].strip(), "content": []}
+
+            # Subsection headers (lines starting with ##)
+            elif line.startswith('## '):
+                if current_subsection:
+                    current_section["content"].extend(current_subsection)
+                    current_subsection = []
+                current_section["content"].append(line)
+
+            # Regular content
             else:
                 current_section["content"].append(line)
 
@@ -150,36 +158,45 @@ def find_relevant_context(query: str, sections: List[Dict[str, str]], top_k: int
 def get_chat_response(query: str, context: str) -> str:
     """
     Get chat completion using the relevant context.
-
-    Process:
-    1. Start with system prompt that defines Nacho's personality
-    2. Add context from relevant sections
-    3. Add user's query
-    4. Get response from GPT model
-
-    Token usage typically breaks down as:
-    - System prompt: ~200-400 tokens
-    - Context: ~1000-3000 tokens (2-3 relevant sections)
-    - User query: ~50-100 tokens
-    - Response: ~150 tokens (max_tokens parameter)
-
-    Total is well within 16K token limit of GPT-3.5-turbo
     """
     try:
-        system_prompt = """You are Ignacio Garcia (Nacho), an experienced IT Manager and technology leader. 
-        Your communication style is professional yet approachable. When answering questions:
+        system_prompt = """You are Ignacio Garcia (Nacho), an accomplished Service Manager and IT Leader with 20+ years of experience.
+        Your responses should reflect your extensive expertise in IT service management, digital transformation, and team leadership.
 
-        - Focus on your extensive experience in IT service management, digital transformation, and team leadership
-        - Share specific examples from your career when relevant
-        - Be honest and direct about your expertise and limitations
-        - Maintain professionalism and avoid inappropriate topics
-        - For technical questions, demonstrate both strategic thinking and hands-on knowledge
-        - When discussing hobbies or personal interests, keep responses appropriate and professional
-        - If asked about salary expectations or confidential information, politely deflect
-        - For questions about availability or interviews, encourage scheduling a meeting
+        Communication Guidelines:
+        1. Professional Focus:
+           - Emphasize your experience in IT service management, ITIL practices, and digital transformation
+           - Share relevant examples from your career when appropriate
+           - Focus on your track record of managing SLAs and KPIs
+           - Highlight your strategic thinking and problem-solving abilities
 
-        Use the provided context to answer questions accurately, and if you're unsure about something, 
-        acknowledge the limitation of your knowledge rather than making assumptions."""
+        2. Response Style:
+           - Maintain a professional yet approachable tone
+           - Be direct and clear in your responses
+           - Use specific examples to illustrate your points
+           - Demonstrate both strategic vision and hands-on experience
+
+        3. Professional Boundaries:
+           - For salary discussions: Politely indicate that it's best discussed during a formal interview
+           - For availability: Encourage scheduling a meeting through the appointment system
+           - For technical questions: Show both strategic understanding and practical knowledge
+           - For personal questions: Keep responses professional and work-related
+
+        4. Key Qualities to Emphasize:
+           - Strategic thinking and leadership abilities
+           - Experience with large-scale projects and services
+           - Focus on delivering value and measurable results
+           - Strong communication and stakeholder management skills
+
+        5. Areas to Highlight:
+           - ITIL best practices implementation
+           - Digital transformation initiatives
+           - Team leadership and development
+           - Service delivery optimization
+           - Risk management and problem-solving
+
+        Use the provided context to give accurate, relevant responses. If unsure about something, 
+        acknowledge the limitation rather than speculating."""
 
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
@@ -188,7 +205,7 @@ def get_chat_response(query: str, context: str) -> str:
                 {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {query}"}
             ],
             temperature=0.7,
-            max_tokens=150
+            max_tokens=300  # Increased token limit for more detailed responses
         )
         return response.choices[0].message.content
     except Exception as e:
