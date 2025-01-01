@@ -11,7 +11,20 @@ logger = logging.getLogger(__name__)
 client = OpenAI()
 
 def load_content_from_file(file_path: str = "content/knowledge_base.txt") -> List[Dict[str, str]]:
-    """Load and chunk content from a text file."""
+    """
+    Load and chunk content from a text file.
+
+    The knowledge base is split into sections based on headers (lines starting with #).
+    Each section becomes a separate chunk that can be independently embedded and retrieved.
+
+    GPT-3.5-turbo has a context window of 16K tokens (~12,000 words)
+    GPT-4 has a context window of 32K tokens (~24,000 words)
+
+    When chunking the content:
+    1. Each section (chunk) should be meaningful on its own
+    2. We aim to keep sections under 2000 words to ensure we can combine multiple relevant sections
+    3. Headers help maintain context when sections are retrieved independently
+    """
     try:
         if not os.path.exists(file_path):
             logger.error(f"File not found: {file_path}")
@@ -29,7 +42,9 @@ def load_content_from_file(file_path: str = "content/knowledge_base.txt") -> Lis
             if not line:
                 continue
 
+            # Start new section on headers (lines starting with #)
             if line.startswith('#'):
+                # Save previous section if it exists
                 if current_section["title"] and current_section["content"]:
                     sections.append({
                         "title": current_section["title"],
@@ -54,7 +69,14 @@ def load_content_from_file(file_path: str = "content/knowledge_base.txt") -> Lis
         return []
 
 def get_embedding(text: str) -> List[float]:
-    """Get embedding for a piece of text using OpenAI's API."""
+    """
+    Get embedding for a piece of text using OpenAI's API.
+
+    The text-embedding-ada-002 model:
+    - Can handle up to 8191 tokens per input
+    - Generates 1536-dimensional embeddings
+    - Cost is very low ($0.0001 per 1K tokens)
+    """
     try:
         response = client.embeddings.create(
             model="text-embedding-ada-002",
@@ -70,7 +92,24 @@ def cosine_similarity(a: List[float], b: List[float]) -> float:
     return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
 
 def find_relevant_context(query: str, sections: List[Dict[str, str]], top_k: int = 2) -> str:
-    """Find the most relevant sections for a given query."""
+    """
+    Find the most relevant sections for a given query.
+
+    Process:
+    1. Convert query to embedding vector
+    2. Convert each section to embedding vector
+    3. Find sections with highest cosine similarity to query
+    4. Return concatenated text of top-k most relevant sections
+
+    The returned context + query + system prompt should fit in model's context window:
+    - GPT-3.5-turbo: 16K tokens
+    - GPT-4: 32K tokens
+
+    We typically retrieve top 2-3 most relevant sections to ensure:
+    1. We have enough context to answer the question
+    2. We stay well within token limits
+    3. We keep response focused and relevant
+    """
     try:
         if not sections:
             logger.warning("No sections available for context retrieval")
@@ -109,7 +148,23 @@ def find_relevant_context(query: str, sections: List[Dict[str, str]], top_k: int
         return ""
 
 def get_chat_response(query: str, context: str) -> str:
-    """Get chat completion using the relevant context."""
+    """
+    Get chat completion using the relevant context.
+
+    Process:
+    1. Start with system prompt that defines Nacho's personality
+    2. Add context from relevant sections
+    3. Add user's query
+    4. Get response from GPT model
+
+    Token usage typically breaks down as:
+    - System prompt: ~200-400 tokens
+    - Context: ~1000-3000 tokens (2-3 relevant sections)
+    - User query: ~50-100 tokens
+    - Response: ~150 tokens (max_tokens parameter)
+
+    Total is well within 16K token limit of GPT-3.5-turbo
+    """
     try:
         system_prompt = """You are Ignacio Garcia (Nacho), an experienced IT Manager and technology leader. 
         Your communication style is professional yet approachable. When answering questions:
@@ -141,6 +196,6 @@ def get_chat_response(query: str, context: str) -> str:
         return "I apologize, but I encountered an error processing your question."
 
 # Configuration
-EMBEDDING_MODEL = "text-embedding-ada-002"
-COMPLETION_MODEL = "gpt-3.5-turbo"
-SIMILARITY_THRESHOLD = 0.7
+EMBEDDING_MODEL = "text-embedding-ada-002"  # 8K token limit per input
+COMPLETION_MODEL = "gpt-3.5-turbo"         # 16K token context window
+SIMILARITY_THRESHOLD = 0.7                  # Minimum similarity score to consider a section relevant
