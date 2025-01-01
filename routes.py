@@ -21,18 +21,24 @@ knowledge_base = load_content_from_file()
 @app.route('/appointment/slots', methods=['GET'])
 def get_appointment_slots():
     try:
-        # Get start and end dates from query parameters
-        start_date = request.args.get('start', type=str)
-        end_date = request.args.get('end', type=str)
+        # Get start and end dates from query parameters with default values
+        start_date = request.args.get('start', type=str, default=datetime.utcnow().isoformat())
+        end_date = request.args.get('end', type=str, default=(datetime.utcnow() + timedelta(days=30)).isoformat())
+
+        # Convert string dates to datetime objects for comparison
+        start_datetime = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
+        end_datetime = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
 
         # Query appointments within the date range
         appointments = Appointment.query.filter(
-            Appointment.date >= start_date,
-            Appointment.date <= end_date,
+            Appointment.date >= start_datetime,
+            Appointment.date <= end_datetime,
             Appointment.status != 'cancelled'
         ).all()
 
+        # Return appointments as JSON
         return jsonify({
+            'success': True,
             'appointments': [{
                 'date': apt.date.isoformat(),
                 'duration': apt.duration
@@ -40,7 +46,11 @@ def get_appointment_slots():
         })
     except Exception as e:
         logger.error(f"Error fetching appointment slots: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'appointments': []  # Return empty list on error
+        }), 500
 
 # Update the appointment route to handle timezone
 @app.route('/appointment', methods=['GET', 'POST'])
