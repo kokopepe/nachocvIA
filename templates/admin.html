@@ -3,7 +3,24 @@
 {% block content %}
 <div class="container">
     <h1 class="mb-4">Knowledge Base Management</h1>
-    
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Import LinkedIn Profile</h5>
+            <form id="linkedin-form" class="mb-4">
+                <div class="mb-3">
+                    <label for="linkedin-url" class="form-label">LinkedIn Profile URL</label>
+                    <input type="url" class="form-control" id="linkedin-url" 
+                           placeholder="https://www.linkedin.com/in/username" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-linkedin"></i> Import Profile
+                </button>
+            </form>
+            <div id="linkedin-status" class="alert d-none"></div>
+        </div>
+    </div>
+
     <div class="card mb-4">
         <div class="card-body">
             <h5 class="card-title">Upload Knowledge Base Content</h5>
