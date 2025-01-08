@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 client = OpenAI()
 
-def load_content_from_file(file_path: str = "content/knowledge_base.txt") -> List[Dict[str, str]]:
+def load_content_from_file(file_path: str = "content/knowledge_base.md") -> List[Dict[str, str]]:
     """
     Load and chunk content from a text file with improved sectioning.
 
