@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block content %}
@@ -7,7 +8,7 @@
 
         <div class="cal-embed-container" style="min-height: 800px; width: 100%;">
             <!-- Cal inline embed code -->
-            <cal-inline-widget src="https://cal.com/jacobo-s.-carballada-vbmhib/" style="min-width:320px;height:100%;"></cal-inline-widget>
+            <cal-inline-widget src="https://cal.com/jacobo-s.-carballada-vbmhib/30min" style="min-width:320px;height:100%;"></cal-inline-widget>
         </div>
     </div>
 </div>
@@ -15,4 +16,11 @@
 
 {% block extra_js %}
 <script src="https://app.cal.com/embed.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    Cal("init", {
+        origin: "https://cal.com"
+    });
+});
+</script>
 {% endblock %}
