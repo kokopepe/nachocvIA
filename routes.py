@@ -122,6 +122,19 @@ def chatbot():
         if not query:
             return jsonify({"response": "Please ask a question."})
 
+        # Get response using RAG
+        context = find_relevant_context(query, knowledge_base)
+        response = get_chat_response(query, context) if context else "I apologize, but I don't have enough information to answer that question accurately."
+
+        # Save chat message
+        chat_message = ChatMessage(
+            user_type=user_type,
+            message=query,
+            response=response
+        )
+        db.session.add(chat_message)
+        db.session.commit()
+
         # Get relevant context using RAG
         context = find_relevant_context(query, knowledge_base)
 
