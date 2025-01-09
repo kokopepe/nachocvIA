@@ -2,97 +2,17 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-lg-8 mx-auto">
+    <div class="col-lg-10 mx-auto">
         <h1 class="mb-4">Schedule an Appointment</h1>
 
-        <div class="alert alert-info">
-            <i class="bi bi-info-circle"></i>
-            Your local timezone is: <span id="local-timezone">detecting...</span>
-        </div>
-
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div id="calendar"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-body">
-                <form id="appointment-form" class="needs-validation" novalidate>
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="user-type" class="form-label">I am a:</label>
-                        <select class="form-select" id="user-type" name="user_type" required>
-                            <option value="">Select...</option>
-                            <option value="recruiter">Recruiter</option>
-                            <option value="employer">Employer</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="company" class="form-label">Company (Optional)</label>
-                        <input type="text" class="form-control" id="company" name="company">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="selected-time" class="form-label">Selected Time Slot</label>
-                        <input type="text" class="form-control" id="selected-time" readonly required>
-                        <input type="hidden" id="date" name="date">
-                        <input type="hidden" id="timezone" name="timezone">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="notes" class="form-label">Additional Notes</label>
-                        <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" disabled id="submit-btn">
-                        <i class="bi bi-calendar-check"></i> Request Appointment
-                    </button>
-                </form>
-            </div>
-        </div>
-
-        <div class="alert alert-info mt-4">
-            <i class="bi bi-info-circle"></i>
-            Appointments are typically 30 minutes long. After submitting your request,
-            you will receive a confirmation email with the final details.
-        </div>
-    </div>
-</div>
-
-<!-- Success Modal -->
-<div class="modal fade" id="successModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Appointment Requested</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p>Your appointment request has been submitted successfully. You will receive an email confirmation shortly.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-            </div>
+        <div class="cal-embed-container" style="min-height: 800px; width: 100%;">
+            <!-- Replace YOUR_CAL_LINK with your actual Cal.com link -->
+            <cal-inline-widget src="YOUR_CAL_LINK"></cal-inline-widget>
         </div>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ url_for('static', filename='js/appointment.js') }}"></script>
+<script src="https://app.cal.com/embed.js"></script>
 {% endblock %}

@@ -53,37 +53,8 @@ def get_appointment_slots():
         }), 500
 
 # Update the appointment route to handle timezone
-@app.route('/appointment', methods=['GET', 'POST'])
+@app.route('/appointment')
 def appointment():
-    if request.method == 'POST':
-        try:
-            data = request.json
-            # Convert the appointment time from user's timezone to UTC
-            appointment = Appointment(
-                name=data['name'],
-                email=data['email'],
-                user_type=data['user_type'],
-                company=data.get('company', ''),
-                date=datetime.fromisoformat(data['date'].replace('Z', '+00:00')),
-                timezone=data['timezone'],
-                notes=data.get('notes', '')
-            )
-
-            # Check for conflicts
-            existing_appointment = Appointment.query.filter(
-                Appointment.date == appointment.date,
-                Appointment.status != 'cancelled'
-            ).first()
-
-            if existing_appointment:
-                return jsonify({"success": False, "error": "This time slot is already booked"})
-
-            db.session.add(appointment)
-            db.session.commit()
-            return jsonify({"success": True})
-        except Exception as e:
-            logger.error(f"Error creating appointment: {str(e)}")
-            return jsonify({"success": False, "error": str(e)})
     return render_template('appointment.html')
 
 @app.route('/')
