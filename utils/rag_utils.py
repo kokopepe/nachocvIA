@@ -124,7 +124,7 @@ def find_relevant_context(query: str, sections: List[Dict[str, str]], top_k: int
             return ""
 
         # Get query embedding
-        query_embedding = get_embedding(query)
+        query_embedding = get_embedding(query)  # Don't cache query embeddings
         if not query_embedding:
             return ""
 
@@ -133,7 +133,7 @@ def find_relevant_context(query: str, sections: List[Dict[str, str]], top_k: int
         for section in sections:
             # Combine title and content for embedding
             section_text = f"{section['title']}: {section['content']}"
-            embedding = get_embedding(section_text)
+            embedding = get_cached_embedding(section_text)
             if embedding:
                 section_embeddings.append({
                     "text": section_text,
@@ -217,3 +217,12 @@ def get_chat_response(query: str, context: str) -> str:
 EMBEDDING_MODEL = "text-embedding-ada-002"  # 8K token limit per input
 COMPLETION_MODEL = "gpt-3.5-turbo"         # 16K token context window
 SIMILARITY_THRESHOLD = 0.7                  # Minimum similarity score to consider a section relevant
+
+# Cache for embeddings
+_embeddings_cache = {}
+
+def get_cached_embedding(text: str) -> List[float]:
+    """Get embedding from cache or compute and cache it."""
+    if text not in _embeddings_cache:
+        _embeddings_cache[text] = get_embedding(text)
+    return _embeddings_cache[text]
