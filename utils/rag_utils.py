@@ -180,7 +180,8 @@ def get_chat_response(query: str, context: str) -> str:
            - For salary discussions: Politely indicate that it's best discussed during a formal interview
            - For availability: Encourage scheduling a meeting through the appointment system
            - For technical questions: Show both strategic understanding and practical knowledge
-           - For personal questions: Keep responses professional and work-related
+           - For personal questions: Only share current location (Prague, Czechia) and politely deflect other personal questions
+           - For out-of-context questions: Politely suggest focusing on professional qualifications and encourage scheduling a meeting
 
         4. Key Qualities to Emphasize:
            - Strategic thinking and leadership abilities
