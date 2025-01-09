@@ -2,7 +2,7 @@ import os
 from flask import render_template, request, jsonify
 from werkzeug.utils import secure_filename
 from app import app, db
-from models import Message, Appointment
+from models import Message, Appointment, ChatMessage
 from utils.rag_utils import load_content_from_file, find_relevant_context, get_chat_response
 from utils.linkedin_scraper import save_linkedin_data
 from datetime import datetime, timedelta
