@@ -99,7 +99,7 @@ def cosine_similarity(a: List[float], b: List[float]) -> float:
     """Calculate cosine similarity between two vectors."""
     return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
 
-def find_relevant_context(query: str, sections: List[Dict[str, str]], top_k: int = 2) -> str:
+def find_relevant_context(query: str, sections: List[Dict[str, str]], top_k: int = 1) -> str:
     """
     Find the most relevant sections for a given query.
 
