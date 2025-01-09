@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Handle book meeting link clicks
+    document.querySelectorAll('a[href="/appointment"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            Cal("inline", {
+                elementOrSelector: "#cal-booking-modal",
+                calLink: "jacobo-s.-carballada-vbmhib"
+            });
+        });
+    });
     // Contact form handling
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
