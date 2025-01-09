@@ -1,14 +1,18 @@
+
 document.addEventListener('DOMContentLoaded', function() {
     // Handle book meeting link clicks
     document.querySelectorAll('a[href="/appointment"]').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            Cal("inline", {
-                elementOrSelector: "#cal-booking-modal",
-                calLink: "jacobo-s.-carballada-vbmhib"
+            Cal("ui", {
+                calLink: "jacobo-s.-carballada-vbmhib/30min",
+                element: "#cal-booking-modal",
+                layout: "month_view"
             });
+            document.getElementById('cal-booking-modal').style.display = 'block';
         });
     });
+
     // Contact form handling
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
