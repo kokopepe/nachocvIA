@@ -5,10 +5,13 @@
 }
 
 .profile-image {
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    height: 250px;
     border-radius: 50%;
     object-fit: cover;
+    border: 4px solid var(--bs-border-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 20px 0;
 }
 
 .chat-container {
